@@ -39,8 +39,26 @@ def get_text_splits_from_document(
     else:
         text_chunks = text_splitter.split_text(
             document.get_content(),
+            metadata_str=document.get_metadata_str() if include_metadata else None,
         )
-        text_splits = [TextSplit(text_chunk=text_chunk) for text_chunk in text_chunks]
+        text_splits = []
+        for text_chunk in text_chunks:
+            text_split = None
+            if text_chunk is TextSplit:
+                text_split = text_chunk
+            elif text_chunk is Document:
+                doc_chunk : Document = text_chunk
+
+                text_split = TextSplit(
+                    text_chunk=doc_chunk.get_text(),
+                    metadata=doc_chunk.metadata,
+                )
+            else:
+                text_split = TextSplit(
+                    text_chunk=text_chunk
+                )
+
+            text_splits.append(text_split)
 
     return text_splits
 
