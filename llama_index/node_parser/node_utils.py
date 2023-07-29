@@ -37,10 +37,7 @@ def get_text_splits_from_document(
             metadata_str=document.get_metadata_str() if include_metadata else None,
         )
     else:
-        text_chunks = text_splitter.split_text(
-            document.get_content(),
-            metadata_str=document.get_metadata_str() if include_metadata else None,
-        )
+        text_chunks = text_splitter.split_text(document.get_content())
         text_splits = []
         for text_chunk in text_chunks:
             text_split = None
@@ -57,6 +54,14 @@ def get_text_splits_from_document(
                 text_split = TextSplit(
                     text_chunk=text_chunk
                 )
+
+            # combine doc_chunk's metadata with the document's metadata
+            if include_metadata and document.metadata:
+                # if doc_chunk has metadata, then combine it with the document's metadata
+                if text_split.metadata is None:
+                    text_split.metadata = {}
+                
+                text_split.metadata.update(document.metadata)
 
             text_splits.append(text_split)
 
