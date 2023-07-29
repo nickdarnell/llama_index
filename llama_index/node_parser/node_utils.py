@@ -41,9 +41,9 @@ def get_text_splits_from_document(
         text_splits = []
         for text_chunk in text_chunks:
             text_split = None
-            if text_chunk is TextSplit:
+            if isinstance(text_chunk, TextSplit):
                 text_split = text_chunk
-            elif text_chunk is Document:
+            elif isinstance(text_chunk, Document):
                 doc_chunk : Document = text_chunk
 
                 text_split = TextSplit(
